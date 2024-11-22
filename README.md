@@ -1,4 +1,4 @@
-Online MCQ Assessment:
+**Online MCQ Assessment:**
 This project is a web-based test management platform that allows hosts to create quizzes, select topics, and manage questions while candidates can register, take tests, and view results.
 
 Features
