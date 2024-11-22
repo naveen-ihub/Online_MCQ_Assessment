@@ -1,54 +1,86 @@
-**Online MCQ Assessment:**
-This project is a web-based test management platform that allows hosts to create quizzes, select topics, and manage questions while candidates can register, take tests, and view results.
 
-Features
-Host Dashboard: Create, edit, and delete quizzes; select topics and manage questions.
-Candidate Dashboard: Register for quizzes, view available tests, and track test statuses.
-Authentication: Secure user sessions with registration and login functionality.
-Database: MongoDB used to store quizzes, questions, and user data.
+# **Online MCQ Assessment**
 
-Prerequisites
-Python: Ensure Python 3.8 or higher is installed.
-MongoDB: Install MongoDB locally or have access to a MongoDB cloud instance.
-Libraries: Install dependencies listed in requirements.txt.
+The Online MCQ Assessment is a web-based platform for managing and taking multiple-choice quizzes. It allows hosts to create and manage tests while providing candidates a seamless interface to register, take tests, and view results.
 
-Installation Steps
-Make sure the folder from the zipfile present in the code platform(vscode) 
-Install Dependencies:
-bash
-Copy code
+---
+
+## **Features**
+
+### Host Dashboard
+- Create, edit, and delete quizzes.
+- Select topics and manage questions.
+- Monitor hosted tests.
+
+### Candidate Dashboard
+- Register and log in securely.
+- View available tests and track test statuses.
+- Take quizzes within the scheduled time.
+
+### Authentication
+- Secure user sessions with registration and login functionality.
+
+---
+
+## **Tech Stack**
+- **Backend**: Flask (Python)
+- **Database**: MongoDB
+- **Frontend**: HTML, CSS, JavaScript
+
+---
+
+## **Prerequisites**
+- **Python**: Ensure Python 3.8 or higher is installed.
+- **MongoDB**: Install MongoDB locally or use a MongoDB cloud instance.
+- **Libraries**: Flask, PyMongo (listed in `requirements.txt`).
+
+---
+
+## **Installation**
+
+### Step 1: Clone the Repository
+```bash
+git clone <repository_url>
+cd <repository_directory>
+```
+
+### Step 2: Install Dependencies
+```bash
 pip install -r requirements.txt
-(flask,pymongo)
+```
+(Dependencies include Flask and PyMongo.)
 
+### Step 3: Configure MongoDB
+Update the MongoDB connection URI in the Flask application (`app.py`):
+```python
+client = pymongo.MongoClient("<your_mongo_connection_uri>")
+```
 
-Configure MongoDB:
-Update the MongoDB connection URI in your Flask application:
-python
-Copy code
-client = pymongo.MongoClient("<Your MongoDB URI>")
-
-
-Run the Flask Application:
-bash
-Copy code
+### Step 4: Run the Application
+Start the Flask application:
+```bash
 python app.py
+```
 
+---
 
+## **Running the Application**
 
-Running the Application
-Open a web browser and navigate to:
-arduino
-Copy code
-http://127.0.0.1:5000
+1. Open your web browser.
+2. Navigate to: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
+---
 
-For Hosts:
-Register or log in.
-Create quizzes, select topics, and manage questions.
-View, edit, or delete hosted tests.
-For Candidates:
-Register for a test using the "Candidate Home" section.
-View the dashboard to see registered tests and their statuses.
-Start tests within the scheduled time.
+## **Usage**
 
+### For Hosts:
+1. Register or log in.
+2. Create quizzes, manage questions, and track tests.
+3. View, edit, or delete hosted tests.
 
+### For Candidates:
+1. Register or log in from the "Candidate Home" section.
+2. View available tests on the dashboard.
+3. Start tests within their scheduled time.
+
+settings and requirements.
