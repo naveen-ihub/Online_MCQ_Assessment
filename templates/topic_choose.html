@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Topics</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .header {
+            padding: 20px;
+            background-color: #007bff;
+            color: white;
+        }
+        .header h3 {
+            margin: 0;
+        }
+        .btn-container {
+            display: flex;
+            gap: 20px;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .card {
+            border: none;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .topic-actions .btn {
+            margin-right: 5px;
+        }
+        .no-topics {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .input-group .btn-outline-secondary {
+            cursor: pointer;
+        }
+        .search-form {
+            margin-bottom: 30px;
+        }
+        .search-form .input-group {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+
+            <div class="btn-back">
+                <a href="javascript:history.back()">
+                    <i class="material-icons">arrow_back</i>
+                </a>
+            </div>
+            
+            <a class="navbar-brand" href="#">Quiz App</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    
+    {% if message %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+
+
+    <!-- Header Section -->
+    <div class="header">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h3>Select Multiple Topics for Your Quiz</h3>
+            <div class="btn-container">
+                <a href="{{ url_for('upload_or_add_questions') }}" class="btn btn-light">
+                    + Create Topic
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Search Form -->
+    <br>
+    <form method="GET" action="{{ url_for('topic_choose') }}" class="search-form d-flex justify-content-center">
+        <div class="input-group">
+            <input type="text" class="form-control" name="search" placeholder="Search topics" value="{{ search_term }}" id="searchInput">
+            <button type="button" class="btn btn-outline-secondary" onclick="clearSearch()">&#x2715;</button>
+            <button class="btn btn-outline-secondary" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </form>
+
+    <div class="container">
+        <!-- List of Available Topics -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h4 class="card-title">Available Topics</h4>
+                {% if message %}
+                    <p class="text-muted text-center">{{ message }}</p>
+                {% endif %}
+                {% if topics %}
+                    <form id="selectTopicsForm" action="{{ url_for('select_question_count') }}" method="POST" onsubmit="return validateForm()">
+                        <ul class="list-group list-group-flush">
+                            {% for topic in topics %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <input type="checkbox" name="selected_topics[]" value="{{ topic.topic_title }}">
+                                        <strong>{{ topic.topic_title }}</strong>
+                                    </div>
+                                    <div class="topic-actions">
+                                        <a href="{{ url_for('view_topic', topic_title=topic.topic_title) }}" class="btn btn-success btn-sm">View</a>
+                                        <a href="{{ url_for('add_questions', topic_title=topic.topic_title) }}" class="btn btn-info btn-sm">Add Questions</a>
+                                        <a href="{{ url_for('delete_topic', topic_title=topic.topic_title) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this topic?')">Delete</a>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+    
+                        <!-- Next Button -->
+                        <div class="mt-4 text-center">
+                            <button type="submit" class="btn btn-primary">Next</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <p class="text-muted no-topics">No topics are available at the moment.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>  
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            window.location.href = "{{ url_for('create_topic') }}";
+        }
+
+        function validateForm() {
+        var checkboxes = document.getElementsByName('selected_topics[]');
+        var isChecked = false;
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                isChecked = true;
+                break;
+            }
+        }
+
+        if (!isChecked) {
+            alert("Please select at least one topic.");
+            return false;  // Prevent form submission
+        }
+
+        return true;  // Allow form submission
+    }
+    </script>
+</body>
+</html>

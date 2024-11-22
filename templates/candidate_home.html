@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Home</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        .navbar-brand:hover {
+            color: #007bff;
+        }
+
+        .nav-link {
+            color: #6c757d;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #343a40;
+        }
+
+        /* Header Styling */
+        h1 {
+            color: #343a40;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Cards Styling */
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            color: #343a40;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        .card-text {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* Button Styling */
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+        .btn-back {
+            margin-right: 20px;
+        }
+
+        .button-container {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+        }
+
+        .button-container .btn-success {
+            background-color: #28a745;
+            font-weight: 600;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .button-container .btn-success:hover {
+            background-color: #218838;
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                margin-bottom: 20px;
+            }
+
+            .button-container {
+                position: static;
+                margin-top: 20px;
+                text-align: center;
+            }
+
+            .button-container .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="btn-back">
+                <a href="{{ url_for('candidate_home') }}" class="btn btn-secondary">
+                    <i class="material-icons">arrow_back</i>
+                </a>
+            </div>
+            <a class="navbar-brand" href="#">Candidate Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <h1>Available Tests</h1>
+    
+        <p class="text-muted">Note: Registration closes before the test's start time.</p>
+    
+        <div class="row">
+            {% for test in all_tests %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ test.title }}</h5>
+                            <p class="card-text"><strong>Organization:</strong> {{ test.organization }}</p>
+                            <p class="card-text">{{ test.about_test[:50] }}...</p> 
+                            <h6 class="card-text"><strong>Deadline:</strong> {{ test.start_time }}</h6>
+                            <h6 class="card-text"><strong>Duration:</strong> {{ test.test_duration }}</h6>
+                            <a href="{{ url_for('register_for_test', quiz_id=test.quiz_id) }}" class="btn btn-primary">Register</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+
+    <!-- Registered Tests Button -->
+    <div class="button-container">
+        <a href="{{ url_for('candidate_dashboard') }}" class="btn btn-success">Registered Tests</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

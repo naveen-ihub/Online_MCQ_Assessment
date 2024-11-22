@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Requirement Confirmation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* General Page Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 40px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: #555;
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+
+        .checkbox-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .checkbox-list label {
+            font-size: 16px;
+            color: #555;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .checkbox-list label:hover {
+            color: #0066ff;
+        }
+
+        .checkbox-list input {
+            margin-right: 12px;
+            accent-color: #0066ff; /* Custom checkbox color */
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .checkbox-list input:hover {
+            transform: scale(1.1);
+        }
+
+        /* Button Styles */
+        button {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 280px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        button:hover {
+            /* background: linear-gradient(90deg, #0056b3, #007bff); */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Responsive Layout */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            button {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+        }
+
+        /* Confirmation Dialog */
+        .confirmation-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            min-width: 300px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .confirmation-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .confirm-yes, .confirm-no {
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-yes {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .confirm-no {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .confirm-yes:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .confirm-no:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* Fade-in Animation */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <h1>System Requirement and Proctoring Settings</h1>
+        <h2>Ensure the following settings before proceeding</h2>
+
+        <div class="checkbox-list">
+            <label><input type="checkbox" id="check1"> Full-screen mode is required.</label>
+            <label><input type="checkbox" id="check2"> No tab switching allowed.</label>
+            <label><input type="checkbox" id="check3"> Screen sharing is prohibited.</label>
+            <label><input type="checkbox" id="check4"> Escape key usage is restricted.</label>
+            <label><input type="checkbox" id="check5"> Notifications should be silenced.</label>
+        </div>
+
+        <a href="/guidelines/{{quiz_id}}">
+            <button id="confirm-btn" disabled>Confirm</button>
+        </a>
+    </div>
+
+    <script>
+        const checkboxes = document.querySelectorAll("input[type='checkbox']");
+        const confirmBtn = document.getElementById("confirm-btn");
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                // Enable the button only when all checkboxes are checked
+                confirmBtn.disabled = !Array.from(checkboxes).every(c => c.checked);
+            });
+        });
+    </script>
+
+</body>
+</html>

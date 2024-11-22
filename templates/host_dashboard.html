@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        /* Custom styling for a professional look */
+        .card {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .card-title {
+            font-weight: bold;
+            color: #343a40;
+        }
+        .card-text {
+            color: #6c757d;
+        }
+        .action-btns .btn {
+            margin-right: 10px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+/* Position the button container in the top-right */
+.button-container {
+    position: absolute;
+    top: 60px;  /* Adjust the top margin */
+    right: 20px;  /* Adjust the right margin */
+    display: flex;
+    gap: 10px;  /* Space between buttons */
+}
+
+/* Button Styles */
+.button-container .btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Hover effects for buttons */
+.button-container .btn:hover {
+    transform: translateY(-5px);
+}
+
+/* Specific button color adjustments */
+.button-container .btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.button-container .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Button hover effects */
+.button-container .btn-success:hover {
+    background-color: #218838;
+}
+
+.button-container .btn-secondary:hover {
+    background-color: #5a6268;
+}
+.btn-back {
+            margin-bottom: 20px;
+            margin-right: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="btn-back">
+                <a href="{{ url_for('host_dashboard') }}" class="btn btn-secondary">
+                    <i class="material-icons">arrow_back</i>
+                </a>
+            </div>
+            <a class="navbar-brand" href="#">Quiz Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Your Quizzes</h2>
+
+        <!-- Cards Layout -->
+        <div class="row">
+            {% for test in tests %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ test.title }}</h5>
+                        <p class="card-text"><strong>Organization:</strong> {{ test.organization }}</p>
+                        <p class="card-text">{{ test.about_test[:50] }}...</p> <!-- Shortened description -->
+
+                        <!-- Action Buttons -->
+                        <div class="action-btns">
+                            <a href="{{ url_for('view_test', quiz_id=test.quiz_id) }}" class="btn btn-primary btn-sm">View</a>
+                            <a href="{{ url_for('edit_test', quiz_id=test.quiz_id) }}" class="btn btn-info btn-sm">Edit</a>
+                            <a href="{{ url_for('delete_test', quiz_id=test.quiz_id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this test?')">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+<!-- Button Container (Top-Right) -->
+        <div class="button-container">
+            <a href="{{ url_for('host_test') }}" class="btn btn-success">Create New Test</a>
+            <a href="{{ url_for('create_topic') }}" class="btn btn-secondary">Traverse Topics</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

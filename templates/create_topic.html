@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Topic</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet"> <!-- For Search Icon -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .header {
+            padding: 20px;
+            background-color: #007bff;
+            color: white;
+        }
+        .header h3 {
+            margin: 0;
+        }
+        .btn-container {
+            display: flex;
+            gap: 20px;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .card {
+            border: none;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .topic-actions .btn {
+            margin-right: 5px;
+        }
+        .no-topics {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .input-group .btn-outline-secondary {
+            cursor: pointer;
+        }
+        .search-form {
+            margin-bottom: 30px;
+        }
+        /* Adjust the width of the search bar */
+        .search-form .input-group {
+            max-width: 800px; /* Set max width for better appearance */
+            margin: 0 auto;
+        }
+        .topic-actions .btn {
+            margin-right: 5px;
+        }
+        .btn-back {
+            margin-bottom: 20px;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    
+     <!-- Navbar -->
+     <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        
+        <div class="container-fluid">
+            <div class="btn-back">
+                <a href="{{ url_for('host_dashboard') }}" class="btn btn-secondary"><i class="material-icons">arrow_back</i></a>
+            </div>
+        
+            <a class="navbar-brand" href="#">Quiz App</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    {% if message %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+
+
+    <!-- Header Section -->
+    <div class="header">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h3>Manage Your Topics</h3>
+            <!-- Create Topic Button Positioned at the Top Right -->
+            
+            <div class="btn-container">
+                <a href="{{ url_for('host_test') }}" class="btn btn-light">
+                    Host Test
+                </a>
+                <a href="{{ url_for('upload_or_add_questions') }}" class="btn btn-light">
+                    + Create Topic
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Search Form -->
+
+    <br>
+     
+    <form method="GET" action="{{ url_for('create_topic') }}" class="search-form d-flex justify-content-center">
+        <div class="input-group">
+            <input type="text" class="form-control" name="search" placeholder="Search topics" value="{{ search_term }}" id="searchInput">
+            <button type="button" class="btn btn-outline-secondary" onclick="clearSearch()">&#x2715;</button> <!-- Clear Icon -->
+            <button class="btn btn-outline-secondary" type="submit">
+                <i class="bi bi-search"></i> <!-- Search Icon -->
+            </button>
+        </div>
+    </form>
+
+    <div class="container">
+        <!-- List of Created Topics -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h4 class="card-title">Created Topics</h4>
+                <!-- {% if message %}
+                    <p class="text-muted text-center">{{ message }}</p>
+                {% endif %} -->
+                {% if topics %}
+                    <ul class="list-group list-group-flush">
+                        {% for topic in topics %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <strong>{{ topic.topic_title }}</strong>
+                                <div class="topic-actions">
+                                    <a href="{{ url_for('view_topic', topic_title=topic.topic_title) }}" class="btn btn-success btn-sm">View</a>
+                                    <a href="{{ url_for('add_questions', topic_title=topic.topic_title) }}" class="btn btn-info btn-sm">Add Questions</a>
+                                    <a href="{{ url_for('delete_topic', topic_title=topic.topic_title) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this topic?')">Delete</a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted no-topics">No topics have been created yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="mt-4">
+            <a href="{{ url_for('host_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            window.location.href = "{{ url_for('create_topic') }}"; // Reload to show all data
+        }
+    </script>
+</body>
+</html>

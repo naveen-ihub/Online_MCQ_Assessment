@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Guidelines</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    /* CSS for styling the pages */
+/* Global Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+h1, h2 {
+    font-weight: 600;
+    color: #444;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #007bff;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 900px;
+    margin: 60px auto;
+    background: #fff;
+    padding: 30px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+/* Start Button Container */
+.start-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+#startInput {
+    padding: 10px;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+    margin-right: 20px;
+    transition: all 0.3s ease;
+}
+
+#startInput:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+#startBtn {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#startBtn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#startBtn:hover:enabled {
+    background-color: #218838;
+}
+
+/* Custom Scrollbar Styles */
+/* ::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+} */
+
+/* Responsive Layout */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    #startInput {
+        width: 150px;
+    }
+
+    #startBtn {
+        width: 150px;
+    }
+}
+
+/* Box Shadow for Focus */
+input:focus, button:focus {
+    outline: none;
+    /* box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); */
+}
+
+/* Test List Styles */
+.test-list {
+    margin-top: 40px;
+}
+
+.test-item {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.test-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.test-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 20px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn:active {
+    transform: translateY(2px);
+}
+
+@media screen and (max-width: 768px) {
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Shadow Effects */
+.box-shadow-lg {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.box-shadow-md {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+
+</style>
+<body>
+
+    <!-- <h1>{{quiz_id}}</h1> -->
+
+    <div class="container">
+        <h1>Assessment Guidelines</h1>
+        <ul>
+            <li> Ensure you have a stable internet connection.</li>
+            <li> Use a supported browser for the best experience.</li>
+            <li> Disable all notifications to avoid interruptions.</li>
+            <li> Full-screen mode is required during the test.</li>
+            <li> Do not switch tabs during the test.</li>
+            <li> Avoid using the Escape key during the assessment.</li>
+            <li> Keep your device's camera and microphone on if required.</li>
+            <li> Follow all proctoring instructions provided.</li>
+            <li> Do not share your screen during the test.</li>
+            <li> Complete the test within the allotted time.</li>
+        </ul>
+
+        <!-- Positioned input and button to the bottom right corner -->
+        <div class="start-container">
+            <input type="text" id="startInput" placeholder="Type 'start' here">
+            <a href="/test_page/{{quiz_id}}">
+                <button id="startBtn" disabled>Start Test</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const startInput = document.getElementById("startInput");
+        const startBtn = document.getElementById("startBtn");
+
+        startInput.addEventListener("input", () => {
+            startBtn.disabled = startInput.value.toLowerCase() !== 'start';
+        });
+    </script>
+</body>
+</html>
+

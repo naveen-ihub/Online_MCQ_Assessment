@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Back to Home Button */
+        .btn-primary {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #4caf50;
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+            transform: scale(1.1);
+        }
+
+        /* Header Styles */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #212529;
+        }
+
+        .text-center {
+            margin-bottom: 20px;
+            padding: 15px 0;
+            border-bottom: 3px solid #6c757d;
+        }
+
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #6c757d;
+        }
+
+        /* Disabled Card Styles */
+        .bg-secondary {
+            background-color: #e9ecef !important;
+            color: #6c757d !important;
+        }
+
+        .bg-secondary .btn {
+            background-color: #adb5bd !important;
+            cursor: not-allowed;
+        }
+
+        /* Start Test Button */
+        .btn-success {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .btn-success.disabled {
+            background-color: #adb5bd;
+            cursor: not-allowed;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .card {
+                margin-bottom: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="{{ url_for('candidate_home') }}"><button class="btn btn-primary">Back to Home</button></a>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Registered Tests</h1>
+    
+        <div class="row">
+            {% for test in registered_tests %}
+                <div class="col-md-4 mb-4">
+                    <div class="card {% if test.status == 'grayed_out' %}bg-secondary text-white{% endif %}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ test.title }}</h5>
+                            <p class="card-text">{{ test.about_test }}</p>
+                            <p><strong>Start Time:</strong> {{ test.start_time }}</p>
+                            <p><strong>End Time:</strong> {{ test.end_time }}</p>
+                            <a href="{{ url_for('start_test', quiz_id=test.quiz_id) }}" 
+                               class="btn btn-success {% if test.status != 'enabled' %}disabled{% endif %}">
+                               Start Test
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

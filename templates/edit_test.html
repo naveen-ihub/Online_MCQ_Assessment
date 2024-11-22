@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Test</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .form-control {
+            margin-bottom: 20px;
+        }
+
+        .card {
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .btn-save {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 25px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-save:hover {
+            background-color: #2980b9;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-back {
+            background-color: #95a5a6;
+            color: white;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+
+        .btn-back:hover {
+            background-color: #7f8c8d;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="card">
+            <h2 class="card-title">Edit Test Details</h2>
+
+            <!-- Test Edit Form -->
+            <form method="POST" action="{{ url_for('update_test', quiz_id=test.quiz_id) }}">
+                <!-- Title -->
+                <label for="title">Test Title</label>
+                <input type="text" id="title" name="title" class="form-control" value="{{ test.title }}" required>
+
+                <!-- Organization -->
+                <label for="organization">Organization</label>
+                <input type="text" id="organization" name="organization" class="form-control" value="{{ test.organization }}" required>
+
+                <!-- Website URL -->
+                <label for="website_url">Website URL</label>
+                <input type="url" id="website_url" name="website_url" class="form-control" value="{{ test.website_url }}">
+
+                <!-- About Test -->
+                <label for="about_test">About Test</label>
+                <textarea id="about_test" name="about_test" class="form-control" rows="4">{{ test.about_test }}</textarea>
+
+                                <!-- Start Time -->
+                <label for="start_time">Start Time</label>
+                <input type="datetime-local" id="start_time" name="start_time" class="form-control" value="{{ test.start_time }}" required>
+
+                <!-- End Time -->
+                <label for="end_time">End Time</label>
+                <input type="datetime-local" id="end_time" name="end_time" class="form-control" value="{{ test.end_time }}" required>
+
+                <!-- Test Duration -->
+                <label for="test_duration">Test Duration</label>
+                <div id="test_duration" class="test_duration">
+                    <input type="number" id="hours" name="hours" onchange="updateDuration()" value="0" min="0" max="23" placeholder="Hours" > hours
+        
+                    <input type="number" id="minutes" name="minutes" onchange="updateDuration()" value="0" min="0" placeholder="Minutes" required> minutes
+                </div>
+
+                <!-- Hidden input field to store combined test duration -->
+                <input type="hidden" id="test_durations" name="test_duration">
+
+
+
+                <!-- Topics -->
+                <!-- <label for="selected_topics">Selected Topics (comma-separated)</label>
+                <input type="text" id="selected_topics" name="selected_topics" class="form-control" value="{{ ', '.join(test.selected_topics) }}" required> -->
+
+                <!-- Save Button -->
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-save"><i class="fas fa-save"></i> Save Changes</button>
+                    <a href="{{ url_for('view_test', quiz_id=test.quiz_id) }}" class="btn btn-back">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap & FontAwesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr("#start_time", {
+            enableTime: true,
+            dateFormat: "Y-m-d h:i K",
+            minDate: "today"
+        });
+
+        flatpickr("#end_time", {
+            enableTime: true,
+            dateFormat: "Y-m-d h:i K",
+            minDate: "today"
+        });
+
+        function updateDuration(){
+        // Get the hours and minutes
+        var hours = parseInt(document.getElementById('hours').value) || 0;
+        var minutes = parseInt(document.getElementById('minutes').value) || 0;
+
+        // Combine them into a single test duration in minutes
+        var totalMinutes = (hours * 60) + minutes;
+
+        // Set the value of the hidden input field
+        document.getElementById('test_durations').value = totalMinutes;
+        }
+
+    </script>
+</body>
+
+</html>

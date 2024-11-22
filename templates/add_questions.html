@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Questions</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .btn-back {
+            margin-bottom: 20px;
+            margin-right: 20px;
+        }
+        .container {
+            max-width: 700px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 50px;
+        }
+        h2 {
+            color: #495057;
+            font-weight: 600;
+        }
+        label {
+            font-weight: 500;
+        }
+        .form-label {
+            margin-bottom: 10px;
+        }
+        .download-button {
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .download-button:hover {
+            text-decoration: underline;
+        }
+        .important {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        
+        <div class="container-fluid">
+            <div class="btn-back">
+                <a href="javascript:history.back()" class="btn btn-secondary"><i class="material-icons">arrow_back</i></a>
+            </div>
+        
+            <a class="navbar-brand" href="#">Quiz App</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="text-center mb-4">Add Questions to {{ topic_title }}</h2>
+
+        <!-- Form for uploading CSV -->
+        <form method="POST" enctype="multipart/form-data">
+            <div class="mb-4">
+                <label for="csv_file" class="form-label">Upload CSV</label>
+                <input type="file" class="form-control" id="csv_file" name="csv_file" accept=".csv" required>
+            </div>
+            
+            <div class="bg-light p-3 rounded mb-4">
+                <h5 class="mb-3">Steps to Upload the .csv File</h5>
+                <ul class="list-unstyled">
+                    <li>1. Download the <a href="http://localhost:8000/Question_template.csv" download="Sample_Template.csv" class="download-button">Sample Sheet</a> and fill in the <strong>Questions</strong> and <strong>Solutions</strong>.</li>
+                    <li>2. Do not use alphabets in <strong class="important">Marks</strong>, <strong class="important">Answer Keywords Marks</strong>, or <strong class="important">Negative Marks</strong>.</li>
+                    <li>3. Use <strong>comma-separated keywords</strong> in the <strong>Answer Keywords</strong> column.</li>
+                    <li>4. Keep the <strong class="important">headers unchanged</strong> to avoid confusion.</li>
+                    <li>5. Ensure the file format is <strong>.csv</strong>.</li>
+                </ul>
+            </div>
+            
+            <button type="submit" class="btn btn-primary mb-4">Upload CSV</button>
+        </form>
+
+        <hr class="my-4">
+
+        <!-- Form for adding questions manually -->
+        <form method="POST">
+            <div class="mb-3">
+                <label for="question" class="form-label">Question</label>
+                <input type="text" class="form-control" id="question" name="question" placeholder="Enter your question" required>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="option_a" class="form-label">Option A</label>
+                    <input type="text" class="form-control" id="option_a" name="option_a" placeholder="Enter option A" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="option_b" class="form-label">Option B</label>
+                    <input type="text" class="form-control" id="option_b" name="option_b" placeholder="Enter option B" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="option_c" class="form-label">Option C</label>
+                    <input type="text" class="form-control" id="option_c" name="option_c" placeholder="Enter option C" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="option_d" class="form-label">Option D</label>
+                    <input type="text" class="form-control" id="option_d" name="option_d" placeholder="Enter option D" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="correct_answer" class="form-label">Correct Answer</label>
+                <select class="form-select" id="correct_answer" name="correct_answer" required>
+                    <option value="A">Option A</option>
+                    <option value="B">Option B</option>
+                    <option value="C">Option C</option>
+                    <option value="D">Option D</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Question</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

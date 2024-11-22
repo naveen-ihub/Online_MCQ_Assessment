@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Creator</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+    
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8fafc;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+    
+        /* Navbar styles */
+        .navbar {
+            background-color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container-fluid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .btn-back {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-back a {
+            color: #6b7280;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            text-decoration: none;
+        }
+
+        .navbar-nav {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #111827;
+        }
+
+    
+        /* Main Content Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+    
+        .topic-section, .question-form, .question-list {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+    
+        h2 {
+            font-size: 1.5rem;
+            color: #1f2937;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+    
+        label {
+            font-size: 0.875rem;
+            color: #374151;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+    
+        input[type="text"], select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #374151;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+    
+        input[type="text"]:focus, select:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 5px rgba(79, 70, 229, 0.2);
+            outline: none;
+        }
+    
+        /* Buttons */
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+    
+        button:hover {
+            transform: scale(1.03);
+        }
+    
+        .add-question-btn {
+            background-color: #3b82f6;
+            color: white;
+        }
+    
+        .cancel-btn {
+            background-color: #ef4444;
+            color: white;
+        }
+    
+        .submit-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #10b981;
+            color: white;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+    
+        .submit-btn:hover {
+            background-color: #059669;
+        }
+    
+        /* Question List Styles */
+        .question-list {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+    
+        .question-item {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+    
+        .correct-answer-box {
+            background-color: #ecfdf5;
+            color: #065f46;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+    
+        .action-buttons {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+    
+        .edit-btn {
+            background-color: #f59e0b;
+            color: white;
+        }
+    
+        .delete-btn {
+            background-color: #ef4444;
+            color: white;
+        }
+    
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+    
+            .navbar-nav {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="nav-left">
+                <div class="btn-back">
+                    <a href="javascript:history.back()">
+                        <i class="material-icons">arrow_back</i>
+                    </a>
+                </div>
+                <a class="navbar-brand" href="#">Quiz Creator</a>
+            </div>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="#">Home</a>
+                <a class="nav-link" href="#">About</a>
+                <a class="nav-link" href="#">Contact</a>
+                <a class="nav-link" href="/">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="left-column">
+            <div class="topic-section">
+                <label for="topic_title">Topic Title</label>
+                <input type="text" id="topic_title" name="topic_title" placeholder="Enter the topic title" required>
+            </div>
+
+            <div class="question-form">
+                <h2>Add New Question</h2>
+                <label for="question">Question Text</label>
+                <input type="text" id="question" placeholder="Type your question here" required>
+
+                <label>Options:</label>
+                <div id="options-container">
+                    <div class="option-group">
+                        <input type="text" placeholder="Option A" required>
+                    </div>
+                    <div class="option-group">
+                        <input type="text" placeholder="Option B" required>
+                    </div>
+                    <div class="option-group">
+                        <input type="text" placeholder="Option C" required>
+                    </div>
+                    <div class="option-group">
+                        <input type="text" placeholder="Option D" required>
+                    </div>
+                </div>
+
+                <label for="correct-option">Correct Answer</label>
+                <select id="correct-option" required>
+                    <option value="">Select Correct Option</option>
+                    <option value="A">Option A</option>
+                    <option value="B">Option B</option>
+                    <option value="C">Option C</option>
+                    <option value="D">Option D</option>
+                </select>
+
+                <div class="button-group">
+                    <button class="add-question-btn" type="button" onclick="addQuestion()">Add Question</button>
+                    <button class="cancel-btn" type="button" onclick="cancelQuestion()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <div class="question-list" id="question-list">
+                <h2>Added Questions</h2>
+                <!-- Questions will be added here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button class="submit-btn" onclick="submitQuestions()">Submit Quiz</button>
+
+    <script>
+      const questions = [];
+      let currentEditIndex = null;
+  
+      function addQuestion() {
+          const questionText = document.getElementById('question').value.trim();
+          const correctOptionText = document.getElementById('correct-option').value.trim();
+          const options = Array.from(document.querySelectorAll('#options-container .option-group input[type="text"]'))
+              .map(input => input.value.trim());
+  
+          // Ensure all fields are filled
+          if (!questionText || !correctOptionText || options.some(opt => opt === "")) {
+              alert("All fields are required and should be filled.");
+              return;
+          }
+          if (correctOptionText === "A"){
+            correct_answer = options[0];
+
+          } 
+          else if (correctOptionText === "B"){
+            correct_answer = options[1];
+          }
+          else if (correctOptionText === "C"){
+            correct_answer = options[2];
+          }
+          else if (correctOptionText === "D"){
+            correct_answer = options[3];
+          }
+          else {
+            alert("Please select a correct option.");
+            return;
+          }
+  
+          // Define question data structure
+          const questionData = {
+              question: questionText,
+              correct_answer: correct_answer,
+              options: options
+          };
+  
+          if (currentEditIndex !== null) {
+              // If in edit mode, replace the current question at the index
+              questions[currentEditIndex] = questionData;
+              currentEditIndex = null;
+          } else {
+              // Otherwise, add the question as new
+              questions.push(questionData);
+          }
+  
+          displayQuestions();
+          clearFields();
+      }
+  
+      function displayQuestions() {
+          const questionList = document.getElementById('question-list');
+          questionList.innerHTML = '<h2>Added Questions</h2>';
+  
+          questions.forEach((q, index) => {
+              const questionItem = document.createElement('div');
+              questionItem.className = 'question-item';
+              questionItem.innerHTML = ` 
+                  <strong>Q${index + 1}:</strong> ${q.question}<br>
+                  ${q.options.map((opt, i) => `<strong>Option ${String.fromCharCode(65 + i)}:</strong> ${opt}`).join("<br>")}
+                  <div class="correct-answer-box">
+                      <strong>Correct Answer:</strong> ${q.correct_answer}
+                  </div>
+                  <div class="action-buttons">
+                      <button class="edit-btn" onclick="editQuestion(${index})">Edit</button>
+                      <button class="delete-btn" onclick="deleteQuestion(${index})">Delete</button>
+                  </div>
+              `;
+              questionList.appendChild(questionItem);
+          });
+      }
+  
+      function clearFields() {
+          document.getElementById('question').value = '';
+          document.getElementById('correct-option').value = '';
+          document.querySelectorAll('#options-container input[type="text"]').forEach(input => input.value = '');
+      }
+  
+      function cancelQuestion() {
+          clearFields();
+          currentEditIndex = null;
+      }
+  
+      function editQuestion(index) {
+          const question = questions[index];
+          document.getElementById('question').value = question.question;
+          document.getElementById('correct-option').value = question.correct_answer;
+  
+          const optionInputs = document.querySelectorAll('#options-container input[type="text"]');
+          question.options.forEach((option, i) => {
+              optionInputs[i].value = option;
+          });
+  
+          currentEditIndex = index;
+      }
+  
+      function deleteQuestion(index) {
+          questions.splice(index, 1);
+          displayQuestions();
+      }
+  
+      async function submitQuestions() {
+          const topicTitle = document.getElementById('topic_title').value.trim();
+  
+          if (topicTitle === '') {
+              alert("Please enter a topic title.");
+              return;
+          }
+  
+          if (questions.length === 0) {
+              alert("Please add at least one question.");
+              return;
+          }
+  
+          const quizData = {
+              topic_title: topicTitle,
+              questions: questions
+          };
+  
+          try {
+            const response = await fetch('/create_questionpage', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(quizData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                alert(errorData.error);
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log("Response data:", data);
+            alert("Questions submitted successfully.");
+            window.location.href = '/create_topic';
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+    </script>
+</body>

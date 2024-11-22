@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host a Quiz - Create Your Own Quiz</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <!-- Google Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <style>
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f7f9fc;
+    margin: 0;
+    padding: 20px;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    /* margin-top: 20px; */
+}
+
+.container:hover {
+    box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #007bff;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+label {
+    font-weight: 600;
+    margin-top: 20px;
+    display: block;
+    font-size: 15px;
+    color: #555;
+}
+
+input[type="text"], input[type="url"], input[type="time"], textarea, input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 25px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+input:focus, textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
+}
+
+.submit-button:hover {
+    background-color: #218838;
+    transform: translateY(-3px);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+nav.navbar {
+    background-color: #007bff;
+    border-radius: 8px;
+    /* margin-bottom: 30px; */
+}
+
+nav.navbar .nav-link {
+    color: #333 !important;
+    font-weight: 500;
+}
+
+nav.navbar .nav-link:hover {
+    color: #333 !important;
+}
+
+.navbar .navbar-brand {
+    color: #333;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+#test_duration input[type="number"] {
+    width: auto;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+#test_duration {
+    display: flex;
+    align-items: center;
+}
+
+#test_duration input {
+    margin-right: 10px;
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .submit-button {
+        padding: 12px;
+    }
+}
+
+.btn-back {
+            margin-bottom: 20px;
+            margin-right: 20px;
+        }
+
+        #test_duration {
+    display: flex;
+    gap: 10px; /* Adjust the gap size as needed */
+}
+
+    </style>
+    
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="btn-back">
+                <a href="javascript:history.back()" class="btn btn-secondary">
+                    <i class="material-icons">arrow_back</i>
+                </a>
+            </div>
+            <a class="navbar-brand" href="#">Quiz App</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br>
+    <br>
+
+    <div class="container">
+        <h1>Host a Quiz</h1>
+        <!-- <button id="quiz-button" class="quiz-button">Start New Quiz</button> -->
+        
+        <form id="quiz-form" method="post" action="{{ url_for('submit_quiz') }}" class="quiz-form">
+            <label for="title">Test/Quiz Title</label>
+            <input type="text" id="title" name="title" required placeholder="Enter quiz title">
+
+            <label for="organization">Organization</label>
+            <input type="text" id="organization" name="organization" required placeholder="Enter organization name">
+
+            <label for="website_url">Website URL</label>
+            <input type="url" id="website_url" name="website_url" required placeholder="Enter website URL">
+
+            <label for="skills">Skills</label>
+            <input type="text" id="skills" name="skills" required placeholder="Enter relevant skills">
+
+            <label for="about_test">About Test</label>
+            <textarea id="about_test" name="about_test" rows="5" required placeholder="Describe the test"></textarea>
+
+            <label for="start_time">Start Date and Time</label>
+            <input type="text" id="start_time" name="start_time" required placeholder="Select start date and time">
+
+            <label for="end_time">End Date and Time</label>
+            <input type="text" id="end_time" name="end_time" required placeholder="Select end date and time">
+<!-- 
+            <label for="test_duration">Test Duration</label>
+            <input type="time" id="test_duration" name="test_duration" required> -->
+
+        <label for="test_duration">Test Duration</label>
+        <div id="test_duration" class="test_duration">
+            <input type="number" id="hours" name="hours" onchange="updateDuration()" value="0" min="0" max="23" placeholder="Hours" > hours
+
+            <input type="number" id="minutes" name="minutes" onchange="updateDuration()" value="0" min="0" max="59" placeholder="Minutes" required> minutes
+        </div>
+
+
+        <!-- Hidden input field to store combined test duration -->
+        <input type="hidden" id="test_durations" name="test_duration">
+
+
+            <button type="submit" class="submit-button">Next</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        // // Toggle the quiz form visibility
+        // var bt = document.getElementById('quiz-button');
+        // document.querySelector('.quiz-button').addEventListener('click', function() {
+        //     const form = document.getElementById('quiz-form'); 
+        //     form.style.display = 'block';
+        //     bt.style.display = 'none';
+        // });
+
+        // Initialize Flatpickr for start and end time inputs
+        flatpickr("#start_time", {
+            enableTime: true,
+            dateFormat: "Y-m-d h:i K",
+            minDate: "today"
+        });
+
+        flatpickr("#end_time", {
+            enableTime: true,
+            dateFormat: "Y-m-d h:i K",
+            minDate: "today"
+        });
+
+        function updateDuration(){
+        // Get the hours and minutes
+        var hours = parseInt(document.getElementById('hours').value) || 0;
+        var minutes = parseInt(document.getElementById('minutes').value) || 0;
+
+        // Combine them into a single test duration in minutes
+        var totalMinutes = (hours * 60) + minutes;
+
+        // Set the value of the hidden input field
+        document.getElementById('test_durations').value = totalMinutes;
+        }
+    </script>
+
+</body>
+</html>

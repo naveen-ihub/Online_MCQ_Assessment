@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Test</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General page styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        /* Card layout */
+        .test-card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 35px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .card-text {
+            font-size: 1.05rem;
+            color: #7f8c8d;
+            margin-bottom: 1.2rem;
+        }
+
+        /* Buttons */
+        .action-buttons .btn {
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-right: 10px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-edit {
+            background-color: #1abc9c;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background-color: #16a085;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-back {
+            margin-bottom: 20px;
+            margin-right: 20px;
+        }
+
+        .btn-back:hover {
+            background-color: #7f8c8d;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Section styling */
+        .section-header {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 15px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 2px;
+            width: 50px;
+            background-color: #3498db;
+        }
+
+        .topic-list li {
+            font-size: 0.98rem;
+            margin-bottom: 8px;
+        }
+
+        /* Icon styling */
+        .icon {
+            margin-right: 12px;
+            color: #3498db;
+        }
+
+        .icon-small {
+            font-size: 1.4rem;
+        }
+
+        .icon:hover {
+            color: #2980b9;
+            transition: color 0.2s ease;
+        }
+
+        /* Tooltips */
+        [data-tooltip] {
+            position: relative;
+            cursor: pointer;
+        }
+
+        [data-tooltip]::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            opacity: 0;
+            white-space: nowrap;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        [data-tooltip]:hover::before {
+            opacity: 1;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Back Button -->
+    <div class="container text-end mb-4">
+        <a href="{{ url_for('host_dashboard') }}" class="btn btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Test Details Card -->
+    <div class="container">
+        <div class="test-card">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1 class="card-title">{{ test.title }}</h1>
+                    <br>
+                    <p class="card-text" data-tooltip="Organization"><i class="fas fa-building icon"></i> {{ test.organization }}</p>
+                    <p class="card-text" data-tooltip="Website"><i class="fas fa-globe icon"></i> <a href="{{ test.website_url }}" target="_blank">{{ test.website_url }}</a></p>
+                    <p class="card-text" data-tooltip="About Test"><i class="fas fa-info-circle icon"></i> {{ test.about_test }}</p>
+
+                    <!-- Topics Section -->
+                    <h5 class="section-header">Selected Topics</h5>
+                    <ul class="topic-list">
+                        {% for topic in test.selected_topics %}
+                            <li><i class="fas fa-check-circle icon-small"></i> {{ topic }} ({{ test.topic_counts[topic] }} questions)</li>
+                        {% endfor %}
+                    </ul>
+
+                    <!-- Duration and Timing -->
+                    <h5 class="section-header">Test Information</h5>
+                    <p class="card-text" data-tooltip="Test Duration"><i class="fas fa-clock icon"></i> Duration: {{ test.test_duration }} minutes</p>
+                    <p class="card-text" data-tooltip="Start Time"><i class="fas fa-calendar-alt icon"></i> Start: {{ test.start_time }}</p>
+                    <p class="card-text" data-tooltip="End Time"><i class="fas fa-calendar-alt icon"></i> End: {{ test.end_time }}</p>
+                </div>
+
+                <!-- Right column for actions -->
+                <div class="col-md-4 text-center">
+                    <!-- Action buttons -->
+                    <div class="action-buttons mt-4">
+                        <a href="{{ url_for('edit_test', quiz_id=test.quiz_id) }}" class="btn btn-edit"><i class="fas fa-edit"></i> Edit Test</a>
+                        <a href="{{ url_for('delete_test', quiz_id=test.quiz_id) }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this test?')">
+                            <i class="fas fa-trash-alt"></i> Delete Test
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & FontAwesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
+
+</html>
